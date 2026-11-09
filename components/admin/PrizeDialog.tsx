@@ -34,12 +34,10 @@ function PrizeForm({
   const [formData, setFormData] = useState({
     title: prizeToEdit?.title || "",
     description: prizeToEdit?.description || "",
-    imageUrl: prizeToEdit?.imageUrl || "",
     tier: (prizeToEdit?.tier || "grand") as PrizeTier,
     unit: prizeToEdit?.unit || "รางวัล",
     round: prizeToEdit?.round || "ประจำปี ๒๕๗๐",
     quantity: prizeToEdit?.quantity || 1,
-    winningNumbersStr: prizeToEdit?.winningNumbers?.join(", ") || "",
     isPublished: prizeToEdit ? prizeToEdit.isPublished : true,
   });
 
@@ -48,36 +46,28 @@ function PrizeForm({
     if (!formData.title.trim()) return;
 
     setLoading(true);
-    const winningNumbers = formData.winningNumbersStr
-      ? formData.winningNumbersStr
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean)
-      : [];
 
     try {
       if (prizeToEdit) {
         await updatePrize(prizeToEdit._id, {
           title: formData.title,
           description: formData.description,
-          imageUrl: formData.imageUrl,
           tier: formData.tier,
           unit: formData.unit,
           round: formData.round,
           quantity: formData.quantity,
-          winningNumbers,
           isPublished: formData.isPublished,
         });
       } else {
         await createPrize({
           title: formData.title,
           description: formData.description,
-          imageUrl: formData.imageUrl,
+          imageUrl: "",
           tier: formData.tier,
           unit: formData.unit,
           round: formData.round,
           quantity: formData.quantity,
-          winningNumbers,
+          winningNumbers: [],
           isPublished: formData.isPublished,
         });
       }
@@ -97,7 +87,7 @@ function PrizeForm({
           {prizeToEdit ? "แก้ไขข้อมูลของรางวัล" : "เพิ่มของรางวัลใหม่"}
         </DialogTitle>
         <DialogDescription className="text-slate-500">
-          กำหนดข้อมูลรางวัล ระดับ จำนวน และหมายเลขสลากที่ถูกรางวัล
+          กำหนดข้อมูลรางวัล ระดับ จำนวน และรายละเอียดของรางวัล
         </DialogDescription>
       </DialogHeader>
 
@@ -195,41 +185,10 @@ function PrizeForm({
 
         <div>
           <label className="text-xs font-semibold text-slate-700 block mb-1">
-            หมายเลขสลากที่ออกรางวัล (คั่นด้วยจุลภาค ,)
-          </label>
-          <Input
-            placeholder="เช่น 25701, 88992 (หรือ 570 สำหรับเลขท้าย)"
-            value={formData.winningNumbersStr}
-            onChange={(e) =>
-              setFormData({ ...formData, winningNumbersStr: e.target.value })
-            }
-            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-amber-500 font-mono"
-          />
-          <span className="text-[11px] text-slate-500 mt-1 block">
-            หมายเลขนี้จะใช้สำหรับระบบตรวจผลสลากอัตโนมัติที่หน้าบ้าน
-          </span>
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">
-            URL รูปภาพ
-          </label>
-          <Input
-            placeholder="https://images.unsplash.com/..."
-            value={formData.imageUrl}
-            onChange={(e) =>
-              setFormData({ ...formData, imageUrl: e.target.value })
-            }
-            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-amber-500"
-          />
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">
             รายละเอียดของรางวัล
           </label>
           <textarea
-            rows={2}
+            rows={3}
             placeholder="ระบุสเปกหรือเงื่อนไขเพิ่มเติม..."
             value={formData.description}
             onChange={(e) =>
