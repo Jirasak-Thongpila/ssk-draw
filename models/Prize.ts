@@ -1,6 +1,16 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-export type PrizeTier = "grand" | "first" | "second" | "consolation" | "special";
+export type PrizeTier =
+  | "grand"      // รางวัลที่ ๑
+  | "first"      // รางวัลที่ ๒
+  | "second"     // รางวัลที่ ๓
+  | "third"      // รางวัลที่ ๔
+  | "fourth"     // รางวัลที่ ๕
+  | "suffix3"    // รางวัลเลขท้าย ๓ ตัว
+  | "adjacent"   // รางวัลข้างเคียงรางวัลที่ ๑
+  | "consolation"
+  | "special";
+
 export type PrizeStatus = "available" | "drawn" | "claimed";
 
 export interface IWinner {
@@ -15,11 +25,13 @@ export interface IPrize {
   description?: string;
   imageUrl?: string;
   tier: PrizeTier;
+  unit: string;
   round: string;
   quantity: number;
   remaining: number;
   isPublished: boolean;
   status: PrizeStatus;
+  winningNumbers: string[];
   winner?: IWinner;
   createdAt: Date;
   updatedAt: Date;
@@ -34,18 +46,22 @@ const PrizeSchema = new Schema<IPrizeDocument>(
     imageUrl: { type: String, default: "" },
     tier: {
       type: String,
-      enum: ["grand", "first", "second", "consolation", "special"],
-      default: "first",
+      default: "grand",
     },
-    round: { type: String, required: true, default: "รอบที่ 1" },
+    unit: { type: String, default: "รางวัล" },
+    round: { type: String, required: true, default: "ประจำปี ๒๕๗๐" },
     quantity: { type: Number, default: 1, min: 1 },
     remaining: { type: Number, default: 1, min: 0 },
-    isPublished: { type: Boolean, default: false, index: true },
+    isPublished: { type: Boolean, default: true, index: true },
     status: {
       type: String,
       enum: ["available", "drawn", "claimed"],
       default: "available",
       index: true,
+    },
+    winningNumbers: {
+      type: [String],
+      default: [],
     },
     winner: {
       name: { type: String, default: "" },
@@ -58,6 +74,5 @@ const PrizeSchema = new Schema<IPrizeDocument>(
   }
 );
 
-// Prevent mongoose model overwrite in hot reload
 export const Prize: Model<IPrizeDocument> =
   mongoose.models.Prize || mongoose.model<IPrizeDocument>("Prize", PrizeSchema);

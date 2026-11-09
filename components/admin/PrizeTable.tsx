@@ -55,9 +55,13 @@ export function PrizeTable({ prizes, onEdit, onDrawWinner }: PrizeTableProps) {
     string,
     { label: string; variant: "gold" | "emerald" | "secondary" | "slate" }
   > = {
-    grand: { label: "Grand Prize", variant: "gold" },
-    first: { label: "รางวัลที่ 1", variant: "gold" },
-    second: { label: "รางวัลที่ 2", variant: "emerald" },
+    grand: { label: "รางวัลที่ ๑", variant: "gold" },
+    adjacent: { label: "ข้างเคียงรางวัลที่ ๑", variant: "gold" },
+    first: { label: "รางวัลที่ ๒", variant: "gold" },
+    second: { label: "รางวัลที่ ๓", variant: "emerald" },
+    third: { label: "รางวัลที่ ๔", variant: "emerald" },
+    fourth: { label: "รางวัลที่ ๕", variant: "secondary" },
+    suffix3: { label: "เลขท้าย ๓ ตัว", variant: "secondary" },
     consolation: { label: "รางวัลปลอบใจ", variant: "slate" },
     special: { label: "รางวัลพิเศษ", variant: "secondary" },
   };
@@ -72,7 +76,7 @@ export function PrizeTable({ prizes, onEdit, onDrawWinner }: PrizeTableProps) {
           ยังไม่มีข้อมูลของรางวัลตามเงื่อนไขที่เลือก
         </h3>
         <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto">
-          สามารถเพิ่มรางวัลใหม่ หรือคลิกปุ่ม &quot;เพิ่มตัวอย่าง (Demo Data)&quot; ที่มุมขวาบนเพื่อทดสอบระบบได้ทันที
+          สามารถเพิ่มรางวัลใหม่ หรือคลิกปุ่ม &quot;โหลดรางวัลสลากกาชาดศรีสะเกษ&quot; ที่มุมขวาบนเพื่อใส่ชุดรางวัล ๑๒๗ รางวัลได้ทันที
         </p>
       </div>
     );
@@ -85,10 +89,10 @@ export function PrizeTable({ prizes, onEdit, onDrawWinner }: PrizeTableProps) {
           <thead className="border-b border-border bg-slate-900/50 text-xs text-muted-foreground uppercase font-medium">
             <tr>
               <th className="py-3 px-4">ของรางวัล</th>
-              <th className="py-3 px-4">ระดับ / รอบ</th>
-              <th className="py-3 px-4 text-center">คงเหลือ / ทั้งหมด</th>
+              <th className="py-3 px-4">ระดับรางวัล</th>
+              <th className="py-3 px-4 text-center">จำนวน</th>
               <th className="py-3 px-4 text-center">สถานะหน้าบ้าน</th>
-              <th className="py-3 px-4">สถานะจับฉลาก / ผู้โชคดี</th>
+              <th className="py-3 px-4">หมายเลขที่ออก / ผู้รับรางวัล</th>
               <th className="py-3 px-4 text-right">การจัดการ</th>
             </tr>
           </thead>
@@ -119,7 +123,7 @@ export function PrizeTable({ prizes, onEdit, onDrawWinner }: PrizeTableProps) {
                           <Trophy className="h-5 w-5" />
                         </div>
                       )}
-                      <div className="min-w-0 max-w-xs">
+                      <div className="min-w-0 max-w-xs sm:max-w-md">
                         <div className="font-medium text-foreground truncate">
                           {prize.title}
                         </div>
@@ -144,18 +148,12 @@ export function PrizeTable({ prizes, onEdit, onDrawWinner }: PrizeTableProps) {
                     </div>
                   </td>
 
-                  {/* Quantity */}
+                  {/* Quantity & Unit */}
                   <td className="py-3 px-4 text-center font-mono">
-                    <span
-                      className={
-                        prize.remaining === 0
-                          ? "text-red-400 font-semibold"
-                          : "text-emerald-400 font-semibold"
-                      }
-                    >
-                      {prize.remaining}
+                    <span className="text-amber-400 font-semibold">
+                      {prize.quantity}
                     </span>
-                    <span className="text-muted-foreground"> / {prize.quantity}</span>
+                    <span className="text-muted-foreground text-xs ml-1">{prize.unit}</span>
                   </td>
 
                   {/* Publish Status Toggle */}
@@ -189,9 +187,21 @@ export function PrizeTable({ prizes, onEdit, onDrawWinner }: PrizeTableProps) {
                     </button>
                   </td>
 
-                  {/* Draw Status & Winner */}
+                  {/* Winning numbers or Winner info */}
                   <td className="py-3 px-4">
-                    {prize.status === "drawn" && prize.winner?.name ? (
+                    {prize.winningNumbers && prize.winningNumbers.length > 0 ? (
+                      <div className="space-y-0.5">
+                        <div className="text-xs font-mono font-semibold text-amber-400">
+                          {prize.winningNumbers.slice(0, 3).join(", ")}
+                          {prize.winningNumbers.length > 3 && ` (+${prize.winningNumbers.length - 3})`}
+                        </div>
+                        {prize.winner?.name && (
+                          <div className="text-[11px] text-muted-foreground">
+                            ผู้รับ: {prize.winner.name}
+                          </div>
+                        )}
+                      </div>
+                    ) : prize.status === "drawn" && prize.winner?.name ? (
                       <div>
                         <div className="inline-flex items-center gap-1 text-xs text-amber-400 font-medium">
                           <CheckCircle2 className="h-3.5 w-3.5 text-amber-400" />
@@ -206,7 +216,7 @@ export function PrizeTable({ prizes, onEdit, onDrawWinner }: PrizeTableProps) {
                     ) : (
                       <span className="inline-flex items-center gap-1 text-xs text-slate-400">
                         <Clock className="h-3.5 w-3.5" />
-                        <span>ยังไม่แจกรางวัล</span>
+                        <span>รอออกรางวัล</span>
                       </span>
                     )}
                   </td>
@@ -219,7 +229,7 @@ export function PrizeTable({ prizes, onEdit, onDrawWinner }: PrizeTableProps) {
                         size="icon"
                         onClick={() => onDrawWinner(prize)}
                         className="h-8 w-8 text-amber-400 hover:text-amber-300 hover:bg-amber-500/10"
-                        title="บันทึกผู้โชคดี"
+                        title="บันทึกผู้โชคดี / หมายเลขที่ออก"
                       >
                         <Trophy className="h-4 w-4" />
                       </Button>
