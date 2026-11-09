@@ -15,6 +15,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { SerializablePrize } from "@/actions/prize-actions";
+import { TicketChecker } from "@/components/public/TicketChecker";
 
 interface PublicShowcaseClientProps {
   initialPrizes: SerializablePrize[];
@@ -207,6 +208,10 @@ export function PublicShowcaseClient({
             </strong>
           </div>
         </div>
+      </section>
+
+      <section id="ticket-checker" aria-label="ตรวจหมายเลขสลาก">
+        <TicketChecker />
       </section>
 
       <section className="results-section" aria-labelledby="prize-list-title">

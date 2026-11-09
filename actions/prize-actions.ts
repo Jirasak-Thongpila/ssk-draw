@@ -170,8 +170,8 @@ export async function getPublicPrizes(filters?: {
  */
 export async function checkTicketResult(ticketNumber: string) {
   const cleanNumber = ticketNumber.trim();
-  if (!cleanNumber) {
-    return { success: false, message: "กรุณาระบุหมายเลขสลาก" };
+  if (!/^\d{5}$/.test(cleanNumber)) {
+    return { success: false, message: "กรุณากรอกหมายเลขสลาก 5 หลัก" };
   }
 
   try {
@@ -220,8 +220,11 @@ export async function checkTicketResult(ticketNumber: string) {
       };
     }
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { success: false, message };
+    console.error("Error checking ticket result:", error);
+    return {
+      success: false,
+      message: "ไม่สามารถตรวจผลสลากได้ กรุณาลองใหม่อีกครั้ง",
+    };
   }
 }
 
