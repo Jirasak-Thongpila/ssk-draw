@@ -1,15 +1,18 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-export type PrizeTier =
-  | "grand"      // รางวัลที่ ๑
-  | "first"      // รางวัลที่ ๒
-  | "second"     // รางวัลที่ ๓
-  | "third"      // รางวัลที่ ๔
-  | "fourth"     // รางวัลที่ ๕
-  | "suffix3"    // รางวัลเลขท้าย ๓ ตัว
-  | "adjacent"   // รางวัลข้างเคียงรางวัลที่ ๑
-  | "consolation"
-  | "special";
+export const PRIZE_TIERS = [
+  "grand",       // รางวัลที่ ๑
+  "adjacent",    // รางวัลข้างเคียงรางวัลที่ ๑
+  "first",       // รางวัลที่ ๒
+  "second",      // รางวัลที่ ๓
+  "third",       // รางวัลที่ ๔
+  "fourth",      // รางวัลที่ ๕
+  "suffix3",     // รางวัลเลขท้าย ๓ ตัว
+  "consolation", // รางวัลปลอบใจ
+  "special",     // รางวัลพิเศษ
+] as const;
+
+export type PrizeTier = (typeof PRIZE_TIERS)[number];
 
 export type PrizeStatus = "available" | "drawn" | "claimed";
 
@@ -46,26 +49,23 @@ const PrizeSchema = new Schema<IPrizeDocument>(
     imageUrl: { type: String, default: "" },
     tier: {
       type: String,
+      enum: PRIZE_TIERS,
       default: "grand",
     },
     unit: { type: String, default: "รางวัล" },
     round: { type: String, required: true, default: "ประจำปี ๒๕๗๐" },
-    quantity: { type: Number, default: 1, min: 1 },
-    remaining: { type: Number, default: 1, min: 0 },
-    isPublished: { type: Boolean, default: true, index: true },
+    quantity: { type: Number, required: true, default: 1, min: 1 },
+    remaining: { type: Number, required: true, default: 1, min: 0 },
+    isPublished: { type: Boolean, default: true },
     status: {
       type: String,
       enum: ["available", "drawn", "claimed"],
       default: "available",
-      index: true,
     },
-    winningNumbers: {
-      type: [String],
-      default: [],
-    },
+    winningNumbers: { type: [String], default: [] },
     winner: {
-      name: { type: String, default: "" },
-      ticketNumber: { type: String, default: "" },
+      name: { type: String },
+      ticketNumber: { type: String },
       announcedAt: { type: Date },
     },
   },
@@ -73,6 +73,15 @@ const PrizeSchema = new Schema<IPrizeDocument>(
     timestamps: true,
   }
 );
+
+// Indexes for high performance searches
+PrizeSchema.index({ isPublished: 1, round: 1, tier: 1 });
+PrizeSchema.index({ winningNumbers: 1 });
+
+// Ensure model re-registers properly during Next.js Hot Reload
+if (mongoose.models.Prize) {
+  delete mongoose.models.Prize;
+}
 
 export const Prize: Model<IPrizeDocument> =
   mongoose.models.Prize || mongoose.model<IPrizeDocument>("Prize", PrizeSchema);
