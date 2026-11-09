@@ -3,32 +3,13 @@
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck, LogOut, ExternalLink, PlusCircle, Sparkles } from "lucide-react";
-import { seedRedCrossPrizes } from "@/actions/prize-actions";
-import { useState } from "react";
+import { ShieldCheck, LogOut, ExternalLink } from "lucide-react";
 
 interface AdminHeaderProps {
-  onOpenCreateDialog: () => void;
+  onOpenCreateDialog?: () => void;
 }
 
 export function AdminHeader({ onOpenCreateDialog }: AdminHeaderProps) {
-  const [seeding, setSeeding] = useState(false);
-
-  const handleSeed = async () => {
-    if (!confirm("ต้องการโหลดรายการของรางวัลตามประกาศสลากกาชาดจังหวัดศรีสะเกษ ๑๒๗ รางวัล ใช่หรือไม่?")) return;
-    setSeeding(true);
-    try {
-      const res = await seedRedCrossPrizes(true);
-      if (!res.success && res.message) {
-        alert(res.message);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setSeeding(false);
-    }
-  };
-
   return (
     <header className="border-b border-slate-200 bg-white/90 backdrop-blur-md sticky top-0 z-40 shadow-2xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -60,28 +41,6 @@ export function AdminHeader({ onOpenCreateDialog }: AdminHeaderProps) {
               <span className="hidden sm:inline">ดูหน้าบ้าน (Public)</span>
             </Button>
           </Link>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleSeed}
-            disabled={seeding}
-            className="gap-1.5 text-xs text-red-600 border-red-200 bg-red-50/80 hover:bg-red-100/80 shadow-2xs"
-          >
-            <Sparkles className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">
-              {seeding ? "กำลังโหลด..." : "โหลดรางวัลสลากกาชาดศรีสะเกษ (๑๒๗ รางวัล)"}
-            </span>
-          </Button>
-
-          <Button
-            size="sm"
-            onClick={onOpenCreateDialog}
-            className="gap-1.5 text-xs bg-amber-500 hover:bg-amber-600 text-white font-semibold shadow-xs"
-          >
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span>เพิ่มรางวัล</span>
-          </Button>
 
           <Button
             variant="ghost"
