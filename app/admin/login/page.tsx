@@ -34,7 +34,7 @@ export default function AdminLoginPage() {
         router.push("/admin");
         router.refresh();
       }
-    } catch (err: any) {
+    } catch {
       setError("เกิดข้อผิดพลาดในการเข้าสู่ระบบ");
     } finally {
       setLoading(false);
