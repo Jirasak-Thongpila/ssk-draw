@@ -47,44 +47,44 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 relative overflow-hidden">
       {/* Subtle ambient background glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
         <div className="mb-4 text-center">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors font-medium"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             กลับสู่หน้าแสดงรางวัล (หน้าบ้าน)
           </Link>
         </div>
 
-        <Card className="border-border/80 shadow-2xl bg-card/90 backdrop-blur-md">
+        <Card className="border-slate-200 shadow-xl bg-white">
           <CardHeader className="text-center pb-2">
-            <div className="mx-auto h-12 w-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-2">
+            <div className="mx-auto h-12 w-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-red-600 mb-2 shadow-2xs">
               <ShieldCheck className="h-6 w-6" />
             </div>
-            <CardTitle className="text-xl">เข้าสู่ระบบหลังบ้าน</CardTitle>
-            <CardDescription className="text-xs">
-              ระบบจัดการและควบคุมการแสดงผลรางวัลจับฉลาก
+            <CardTitle className="text-xl font-bold text-slate-900">เข้าสู่ระบบหลังบ้าน</CardTitle>
+            <CardDescription className="text-xs text-slate-500">
+              ระบบจัดการและควบคุมการแสดงผลรางวัลสลากกาชาดศรีสะเกษ
             </CardDescription>
           </CardHeader>
 
           <CardContent className="pt-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs">
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs">
                   <AlertCircle className="h-4 w-4 shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300 flex items-center gap-1.5">
-                  <User className="h-3.5 w-3.5 text-muted-foreground" />
+                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <User className="h-3.5 w-3.5 text-slate-400" />
                   ชื่อผู้ใช้งาน (Username)
                 </label>
                 <Input
@@ -94,12 +94,13 @@ export default function AdminLoginPage() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   autoComplete="username"
+                  className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-amber-500"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300 flex items-center gap-1.5">
-                  <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <Lock className="h-3.5 w-3.5 text-slate-400" />
                   รหัสผ่าน (Password)
                 </label>
                 <Input
@@ -109,23 +110,24 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
+                  className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-amber-500"
                 />
               </div>
 
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-2 gap-2 font-semibold"
+                className="w-full mt-2 gap-2 font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xs"
               >
                 <span>{loading ? "กำลังตรวจสอบสิทธิ์..." : "เข้าสู่ระบบหลังบ้าน"}</span>
                 <ArrowRight className="h-4 w-4" />
               </Button>
 
-              <div className="pt-3 border-t border-border/60 text-center">
+              <div className="pt-3 border-t border-slate-100 text-center">
                 <button
                   type="button"
                   onClick={handleFillDemo}
-                  className="text-xs text-amber-400/90 hover:text-amber-300 underline underline-offset-4 cursor-pointer"
+                  className="text-xs text-amber-700 hover:text-amber-800 underline underline-offset-4 cursor-pointer font-medium"
                 >
                   กรอกบัญชีผู้ดูแลทดสอบอัตโนมัติ (admin / admin123)
                 </button>

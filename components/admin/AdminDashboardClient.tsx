@@ -62,7 +62,7 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
   const drawnCount = initialPrizes.filter((p) => p.status === "drawn").length;
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <AdminHeader
         onOpenCreateDialog={() => {
           setEditingPrize(null);
@@ -73,57 +73,57 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Metric Overview Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="bg-card/70 border-border">
+          <Card className="bg-white border-slate-200 shadow-xs">
             <CardContent className="p-4 flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground">ของรางวัลทั้งหมด</p>
-                <p className="text-2xl font-bold font-mono text-foreground mt-1">
+                <p className="text-xs font-medium text-slate-500">ของรางวัลทั้งหมด</p>
+                <p className="text-2xl font-bold font-mono text-slate-900 mt-1">
                   {totalCount}
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-300">
+              <div className="h-10 w-10 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700">
                 <Gift className="h-5 w-5" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-card/70 border-border">
+          <Card className="bg-white border-slate-200 shadow-xs">
             <CardContent className="p-4 flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground">เผยแพร่สู่หน้าบ้าน</p>
-                <p className="text-2xl font-bold font-mono text-emerald-400 mt-1">
+                <p className="text-xs font-medium text-slate-500">เผยแพร่สู่หน้าบ้าน</p>
+                <p className="text-2xl font-bold font-mono text-emerald-600 mt-1">
                   {publishedCount}
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <div className="h-10 w-10 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
                 <Eye className="h-5 w-5" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-card/70 border-border">
+          <Card className="bg-white border-slate-200 shadow-xs">
             <CardContent className="p-4 flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground">แบบร่าง (ซ่อนหลังบ้าน)</p>
-                <p className="text-2xl font-bold font-mono text-slate-400 mt-1">
+                <p className="text-xs font-medium text-slate-500">แบบร่าง (ซ่อนหลังบ้าน)</p>
+                <p className="text-2xl font-bold font-mono text-slate-600 mt-1">
                   {draftCount}
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-slate-800/80 border border-slate-700 flex items-center justify-center text-slate-400">
+              <div className="h-10 w-10 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500">
                 <EyeOff className="h-5 w-5" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-card/70 border-border">
+          <Card className="bg-white border-slate-200 shadow-xs">
             <CardContent className="p-4 flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground">จับฉลากแล้ว</p>
-                <p className="text-2xl font-bold font-mono text-amber-400 mt-1">
+                <p className="text-xs font-medium text-slate-500">จับฉลากแล้ว</p>
+                <p className="text-2xl font-bold font-mono text-amber-600 mt-1">
                   {drawnCount}
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+              <div className="h-10 w-10 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
                 <Trophy className="h-5 w-5" />
               </div>
             </CardContent>
@@ -131,20 +131,20 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="p-4 rounded-xl border border-border bg-card/60 backdrop-blur-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+        <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
           <div className="relative flex-1 max-w-sm">
-            <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+            <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             <Input
               placeholder="ค้นหาชื่อของรางวัล..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-9"
+              className="pl-9 h-9 bg-slate-50/60 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:bg-white"
             />
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mr-1">
-              <Filter className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 mr-1 font-medium">
+              <Filter className="h-3.5 w-3.5 text-slate-400" />
               <span>ตัวกรอง:</span>
             </div>
 
@@ -156,7 +156,7 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
                   e.target.value as "all" | "published" | "draft"
                 )
               }
-              className="rounded-md border border-input bg-background/60 px-2.5 py-1.5 text-xs text-foreground focus:outline-none"
+              className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-800 shadow-2xs focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
             >
               <option value="all">สถานะเผยแพร่ทั้งหมด</option>
               <option value="published">เฉพาะเผยแพร่แล้ว (Visible)</option>
@@ -167,7 +167,7 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
             <select
               value={selectedRound}
               onChange={(e) => setSelectedRound(e.target.value)}
-              className="rounded-md border border-input bg-background/60 px-2.5 py-1.5 text-xs text-foreground focus:outline-none"
+              className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-800 shadow-2xs focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
             >
               <option value="all">ทุกรอบกิจกรรม</option>
               {rounds.map((r) => (
@@ -181,7 +181,7 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="rounded-md border border-input bg-background/60 px-2.5 py-1.5 text-xs text-foreground focus:outline-none"
+              className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-800 shadow-2xs focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
             >
               <option value="all">สถานะรางวัลทั้งหมด</option>
               <option value="available">ยังไม่แจก</option>

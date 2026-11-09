@@ -23,7 +23,7 @@ export default function AdminPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-white flex items-center justify-center text-xs text-muted-foreground">
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center text-xs text-slate-500">
           กำลังโหลดข้อมูลแดชบอร์ด...
         </div>
       }

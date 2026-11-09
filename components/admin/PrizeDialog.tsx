@@ -93,18 +93,18 @@ function PrizeForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-h-[85vh] overflow-y-auto pr-1">
       <DialogHeader>
-        <DialogTitle>
+        <DialogTitle className="text-slate-900 font-bold">
           {prizeToEdit ? "แก้ไขข้อมูลของรางวัล" : "เพิ่มของรางวัลใหม่"}
         </DialogTitle>
-        <DialogDescription>
+        <DialogDescription className="text-slate-500">
           กำหนดข้อมูลรางวัล ระดับ จำนวน และหมายเลขสลากที่ถูกรางวัล
         </DialogDescription>
       </DialogHeader>
 
       <div className="space-y-3">
         <div>
-          <label className="text-xs font-medium text-slate-300 block mb-1">
-            ชื่อของรางวัล <span className="text-destructive">*</span>
+          <label className="text-xs font-semibold text-slate-700 block mb-1">
+            ชื่อของรางวัล <span className="text-red-500">*</span>
           </label>
           <Input
             required
@@ -113,12 +113,13 @@ function PrizeForm({
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
+            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-amber-500"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs font-medium text-slate-300 block mb-1">
+            <label className="text-xs font-semibold text-slate-700 block mb-1">
               ระดับรางวัล (Tier)
             </label>
             <select
@@ -129,7 +130,7 @@ function PrizeForm({
                   tier: e.target.value as PrizeTier,
                 })
               }
-              className="w-full rounded-md border border-input bg-background/50 px-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+              className="w-full rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-900 shadow-2xs focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
             >
               <option value="grand">รางวัลที่ ๑</option>
               <option value="adjacent">ข้างเคียงรางวัลที่ ๑</option>
@@ -144,7 +145,7 @@ function PrizeForm({
           </div>
 
           <div>
-            <label className="text-xs font-medium text-slate-300 block mb-1">
+            <label className="text-xs font-semibold text-slate-700 block mb-1">
               หน่วยนับ (เช่น คัน, แท่ง, เครื่อง)
             </label>
             <Input
@@ -153,13 +154,14 @@ function PrizeForm({
               onChange={(e) =>
                 setFormData({ ...formData, unit: e.target.value })
               }
+              className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-amber-500"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs font-medium text-slate-300 block mb-1">
+            <label className="text-xs font-semibold text-slate-700 block mb-1">
               จำนวนของรางวัล
             </label>
             <Input
@@ -172,11 +174,12 @@ function PrizeForm({
                   quantity: parseInt(e.target.value) || 1,
                 })
               }
+              className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-amber-500"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-slate-300 block mb-1">
+            <label className="text-xs font-semibold text-slate-700 block mb-1">
               รอบกิจกรรม
             </label>
             <Input
@@ -185,12 +188,13 @@ function PrizeForm({
               onChange={(e) =>
                 setFormData({ ...formData, round: e.target.value })
               }
+              className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-amber-500"
             />
           </div>
         </div>
 
         <div>
-          <label className="text-xs font-medium text-slate-300 block mb-1">
+          <label className="text-xs font-semibold text-slate-700 block mb-1">
             หมายเลขสลากที่ออกรางวัล (คั่นด้วยจุลภาค ,)
           </label>
           <Input
@@ -199,14 +203,15 @@ function PrizeForm({
             onChange={(e) =>
               setFormData({ ...formData, winningNumbersStr: e.target.value })
             }
+            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-amber-500 font-mono"
           />
-          <span className="text-[11px] text-muted-foreground mt-0.5 block">
+          <span className="text-[11px] text-slate-500 mt-1 block">
             หมายเลขนี้จะใช้สำหรับระบบตรวจผลสลากอัตโนมัติที่หน้าบ้าน
           </span>
         </div>
 
         <div>
-          <label className="text-xs font-medium text-slate-300 block mb-1">
+          <label className="text-xs font-semibold text-slate-700 block mb-1">
             URL รูปภาพ
           </label>
           <Input
@@ -215,11 +220,12 @@ function PrizeForm({
             onChange={(e) =>
               setFormData({ ...formData, imageUrl: e.target.value })
             }
+            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-amber-500"
           />
         </div>
 
         <div>
-          <label className="text-xs font-medium text-slate-300 block mb-1">
+          <label className="text-xs font-semibold text-slate-700 block mb-1">
             รายละเอียดของรางวัล
           </label>
           <textarea
@@ -229,7 +235,7 @@ function PrizeForm({
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
-            className="w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+            className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 shadow-2xs focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
           />
         </div>
 
@@ -241,27 +247,33 @@ function PrizeForm({
             onChange={(e) =>
               setFormData({ ...formData, isPublished: e.target.checked })
             }
-            className="h-4 w-4 rounded border-border text-amber-500 focus:ring-amber-500 cursor-pointer"
+            className="h-4 w-4 rounded border-slate-300 text-amber-500 focus:ring-amber-500 cursor-pointer"
           />
           <label
             htmlFor="isPublishedCheck"
-            className="text-xs text-foreground cursor-pointer select-none"
+            className="text-xs text-slate-700 cursor-pointer select-none font-medium"
           >
             เผยแพร่สู่หน้าบ้านทันที (ถ้าไม่ติ๊กจะเป็นแบบร่าง ซ่อนอยู่หลังบ้าน)
           </label>
         </div>
       </div>
 
-      <DialogFooter>
+      <DialogFooter className="pt-2 border-t border-slate-100">
         <Button
           type="button"
           variant="outline"
           size="sm"
           onClick={onClose}
+          className="border-slate-200 text-slate-700 hover:bg-slate-50"
         >
           ยกเลิก
         </Button>
-        <Button type="submit" size="sm" disabled={loading}>
+        <Button
+          type="submit"
+          size="sm"
+          disabled={loading}
+          className="bg-amber-500 hover:bg-amber-600 text-white font-semibold shadow-xs"
+        >
           {loading ? "กำลังบันทึก..." : prizeToEdit ? "บันทึกการแก้ไข" : "สร้างของรางวัล"}
         </Button>
       </DialogFooter>
@@ -279,7 +291,7 @@ export function PrizeDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent onClose={() => onOpenChange(false)} className="max-w-lg">
+      <DialogContent onClose={() => onOpenChange(false)} className="max-w-lg bg-white border-slate-200 shadow-xl">
         <PrizeForm
           key={prizeToEdit?._id || "new"}
           prizeToEdit={prizeToEdit}
