@@ -85,7 +85,7 @@ function serializePrize(p: RawPrizeDoc): SerializablePrize {
 
 function safeRevalidate(path: string) {
   try {
-    safeRevalidate(path);
+    revalidatePath(path);
   } catch {
     // Ignore when called outside of Next.js request context (e.g. CLI seed scripts)
   }
