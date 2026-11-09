@@ -6,7 +6,9 @@ import { AdminHeader } from "@/components/admin/AdminHeader";
 import { PrizeTable } from "@/components/admin/PrizeTable";
 import { PrizeDialog } from "@/components/admin/PrizeDialog";
 import { WinnerDialog } from "@/components/admin/WinnerDialog";
+import { RecordWinningNumbersDialog } from "@/components/admin/RecordWinningNumbersDialog";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Trophy,
@@ -15,6 +17,8 @@ import {
   Gift,
   Search,
   Filter,
+  PlusCircle,
+  Hash,
 } from "lucide-react";
 
 interface AdminDashboardClientProps {
@@ -23,6 +27,7 @@ interface AdminDashboardClientProps {
 
 export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProps) {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [recordNumbersDialogOpen, setRecordNumbersDialogOpen] = useState(false);
   const [editingPrize, setEditingPrize] = useState<SerializablePrize | null>(null);
   const [winnerPrize, setWinnerPrize] = useState<SerializablePrize | null>(null);
 
@@ -63,12 +68,7 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      <AdminHeader
-        onOpenCreateDialog={() => {
-          setEditingPrize(null);
-          setCreateDialogOpen(true);
-        }}
-      />
+      <AdminHeader />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Metric Overview Cards */}
@@ -130,8 +130,9 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
           </Card>
         </div>
 
-        {/* Filter & Search Bar */}
-        <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+        {/* Filter & Actions Bar (Located above the table) */}
+        <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-xs flex flex-col xl:flex-row gap-3 items-stretch xl:items-center justify-between">
+          {/* Left: Search input */}
           <div className="relative flex-1 max-w-sm">
             <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             <Input
@@ -142,6 +143,7 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
             />
           </div>
 
+          {/* Right: Filters & Action Buttons */}
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex items-center gap-1.5 text-xs text-slate-500 mr-1 font-medium">
               <Filter className="h-3.5 w-3.5 text-slate-400" />
@@ -187,6 +189,31 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
               <option value="available">ยังไม่แจก</option>
               <option value="drawn">จับฉลากแล้ว</option>
             </select>
+
+            <div className="h-5 w-px bg-slate-200 mx-1 hidden sm:block" />
+
+            {/* Action Buttons on the Top-Right of Table */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setRecordNumbersDialogOpen(true)}
+              className="gap-1.5 text-xs border-amber-300 bg-amber-50/80 text-amber-800 hover:bg-amber-100 shadow-2xs cursor-pointer font-medium"
+            >
+              <Hash className="h-3.5 w-3.5 text-amber-600" />
+              <span>กรอกตัวเลขรางวัล</span>
+            </Button>
+
+            <Button
+              size="sm"
+              onClick={() => {
+                setEditingPrize(null);
+                setCreateDialogOpen(true);
+              }}
+              className="gap-1.5 text-xs bg-amber-500 hover:bg-amber-600 text-white font-semibold shadow-xs cursor-pointer"
+            >
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span>เพิ่มรางวัล</span>
+            </Button>
           </div>
         </div>
 
@@ -210,6 +237,12 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
             if (!open) setEditingPrize(null);
           }}
           prizeToEdit={editingPrize}
+        />
+
+        <RecordWinningNumbersDialog
+          open={recordNumbersDialogOpen}
+          onOpenChange={setRecordNumbersDialogOpen}
+          prizes={initialPrizes}
         />
 
         <WinnerDialog
