@@ -151,7 +151,11 @@ export function AdminDashboardClient({ initialPrizes }: AdminDashboardClientProp
             {/* Publish Filter */}
             <select
               value={selectedPublish}
-              onChange={(e) => setSelectedPublish(e.target.value as any)}
+              onChange={(e) =>
+                setSelectedPublish(
+                  e.target.value as "all" | "published" | "draft"
+                )
+              }
               className="rounded-md border border-input bg-background/60 px-2.5 py-1.5 text-xs text-foreground focus:outline-none"
             >
               <option value="all">สถานะเผยแพร่ทั้งหมด</option>

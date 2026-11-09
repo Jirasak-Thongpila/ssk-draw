@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "@/lib/mongodb";
-import { Prize, IPrize, PrizeTier, PrizeStatus } from "@/models/Prize";
+import { Prize, PrizeTier, PrizeStatus } from "@/models/Prize";
 
 export interface PrizeAdminFilter {
   round?: string;
@@ -31,7 +31,27 @@ export interface SerializablePrize {
   updatedAt: string;
 }
 
-function serializePrize(p: any): SerializablePrize {
+interface RawPrizeDoc {
+  _id: { toString(): string };
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  tier: PrizeTier;
+  round: string;
+  quantity: number;
+  remaining: number;
+  isPublished: boolean;
+  status: PrizeStatus;
+  winner?: {
+    name?: string;
+    ticketNumber?: string;
+    announcedAt?: Date | string;
+  };
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+function serializePrize(p: RawPrizeDoc): SerializablePrize {
   return {
     _id: p._id.toString(),
     title: p.title,
@@ -41,7 +61,7 @@ function serializePrize(p: any): SerializablePrize {
     round: p.round,
     quantity: p.quantity,
     remaining: p.remaining,
-    isPublished: !!p.isPublished,
+    isPublished: Boolean(p.isPublished),
     status: p.status,
     winner: p.winner?.name
       ? {
@@ -64,7 +84,7 @@ function serializePrize(p: any): SerializablePrize {
 export async function getPrizesAdmin(filters?: PrizeAdminFilter): Promise<SerializablePrize[]> {
   try {
     await connectToDatabase();
-    const query: Record<string, any> = {};
+    const query: Record<string, unknown> = {};
 
     if (filters?.round && filters.round !== "all") {
       query.round = filters.round;
@@ -84,7 +104,7 @@ export async function getPrizesAdmin(filters?: PrizeAdminFilter): Promise<Serial
       query.title = { $regex: filters.search.trim(), $options: "i" };
     }
 
-    const prizes = await Prize.find(query).sort({ createdAt: -1 }).lean();
+    const prizes = await Prize.find(query).sort({ createdAt: -1 }).lean<RawPrizeDoc[]>();
     return prizes.map(serializePrize);
   } catch (error) {
     console.error("Error fetching admin prizes:", error);
@@ -104,7 +124,7 @@ export async function getPublicPrizes(filters?: {
   try {
     await connectToDatabase();
     // Strict requirement: isPublished MUST be true
-    const query: Record<string, any> = { isPublished: true };
+    const query: Record<string, unknown> = { isPublished: true };
 
     if (filters?.round && filters.round !== "all") {
       query.round = filters.round;
@@ -121,11 +141,10 @@ export async function getPublicPrizes(filters?: {
     const prizes = await Prize.find(query)
       .select("-__v")
       .sort({
-        // Tier ordering: grand first, then first, second, etc.
         tier: 1,
         createdAt: -1,
       })
-      .lean();
+      .lean<RawPrizeDoc[]>();
 
     return prizes.map(serializePrize);
   } catch (error) {
@@ -160,9 +179,10 @@ export async function createPrize(data: {
     revalidatePath("/");
     revalidatePath("/admin");
     return { success: true, prizeId: newPrize._id.toString() };
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Create prize failed:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: message };
   }
 }
 
@@ -188,9 +208,10 @@ export async function updatePrize(
     revalidatePath("/");
     revalidatePath("/admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Update prize failed:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: message };
   }
 }
 
@@ -206,9 +227,10 @@ export async function togglePublishPrize(id: string) {
     revalidatePath("/");
     revalidatePath("/admin");
     return { success: true, isPublished: prize.isPublished };
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Toggle publish failed:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: message };
   }
 }
 
@@ -239,9 +261,10 @@ export async function drawWinner(
     revalidatePath("/");
     revalidatePath("/admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Draw winner failed:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: message };
   }
 }
 
@@ -253,9 +276,10 @@ export async function deletePrize(id: string) {
     revalidatePath("/");
     revalidatePath("/admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Delete prize failed:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: message };
   }
 }
 
@@ -347,8 +371,9 @@ export async function seedSamplePrizes() {
     revalidatePath("/");
     revalidatePath("/admin");
     return { success: true, count: samplePrizes.length };
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Seed prizes failed:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: message };
   }
 }

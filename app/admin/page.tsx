@@ -1,12 +1,13 @@
+import { Suspense } from "react";
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { getPrizesAdmin } from "@/actions/prize-actions";
 import { AdminDashboardClient } from "@/components/admin/AdminDashboardClient";
 
-export const dynamic = "force-dynamic";
-
-export default async function AdminPage() {
+async function AdminContent() {
+  await connection();
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -16,4 +17,18 @@ export default async function AdminPage() {
   const prizes = await getPrizesAdmin();
 
   return <AdminDashboardClient initialPrizes={prizes} />;
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-background flex items-center justify-center text-xs text-muted-foreground">
+          กำลังโหลดข้อมูลแดชบอร์ด...
+        </div>
+      }
+    >
+      <AdminContent />
+    </Suspense>
+  );
 }
