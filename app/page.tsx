@@ -3,7 +3,7 @@ import { connection } from "next/server";
 import { getPublicPrizes } from "@/actions/prize-actions";
 import { PublicShowcaseClient } from "@/components/public/PublicShowcaseClient";
 
-async function PublicLotteryBoardSection() {
+async function PublicPrizesSection() {
   await connection();
   // STRICT DATA FILTERING: Only isPublished === true prizes reach the client
   const publicPrizes = await getPublicPrizes();

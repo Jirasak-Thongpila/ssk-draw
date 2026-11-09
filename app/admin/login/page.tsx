@@ -129,7 +129,6 @@ export default function AdminLoginPage() {
                   onClick={handleFillDemo}
                   className="text-xs text-amber-700 hover:text-amber-800 underline underline-offset-4 cursor-pointer font-medium"
                 >
-                  กรอกบัญชีผู้ดูแลทดสอบอัตโนมัติ (admin / admin123)
                 </button>
               </div>
             </form>
