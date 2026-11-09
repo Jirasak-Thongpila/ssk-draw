@@ -134,31 +134,17 @@ export function PrizeTable({ prizes, onEdit, onDrawWinner }: PrizeTableProps) {
                   key={prize._id}
                   className="hover:bg-slate-50/80 transition-colors"
                 >
-                  {/* Title & Image */}
+                  {/* Title & Description */}
                   <td className="py-3 px-4">
-                    <div className="flex items-center gap-3">
-                      {prize.imageUrl ? (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
-                          src={prize.imageUrl}
-                          alt={prize.title}
-                          className="h-11 w-11 rounded-lg object-cover border border-slate-200 shrink-0 bg-slate-50 shadow-2xs"
-                        />
-                      ) : (
-                        <div className="h-11 w-11 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 shrink-0">
-                          <Trophy className="h-5 w-5" />
+                    <div className="min-w-0 max-w-xs sm:max-w-md">
+                      <div className="font-semibold text-slate-900 truncate">
+                        {prize.title}
+                      </div>
+                      {prize.description && (
+                        <div className="text-xs text-slate-500 truncate mt-0.5">
+                          {prize.description}
                         </div>
                       )}
-                      <div className="min-w-0 max-w-xs sm:max-w-md">
-                        <div className="font-semibold text-slate-900 truncate">
-                          {prize.title}
-                        </div>
-                        {prize.description && (
-                          <div className="text-xs text-slate-500 truncate">
-                            {prize.description}
-                          </div>
-                        )}
-                      </div>
                     </div>
                   </td>
 
