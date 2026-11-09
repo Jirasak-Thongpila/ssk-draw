@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lucky Draw Awards | เว็บแสดงและจัดการรางวัลจับฉลาก",
-  description: "ระบบจัดแสดงและบริหารจัดการของรางวัลสำหรับกิจกรรมจับฉลาก พร้อมระบบกรองข้อมูลหลังบ้าน",
+  title: "สลากกาชาด ประจำปี ๒๕๗๐ จังหวัดศรีสะเกษ | ตรวจผลและแสดงรางวัล",
+  description: "ระบบจัดแสดงและตรวจผลรางวัลสลากกาชาด จังหวัดศรีสะเกษ ประจำปี ๒๕๗๐ รวม ๑๒๗ รางวัล",
 };
 
 export default function RootLayout({

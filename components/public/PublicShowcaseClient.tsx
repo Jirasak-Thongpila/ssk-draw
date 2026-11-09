@@ -4,7 +4,8 @@ import { useState } from "react";
 import { SerializablePrize } from "@/actions/prize-actions";
 import { PrizeFilters } from "@/components/public/PrizeFilters";
 import { PrizeGrid } from "@/components/public/PrizeGrid";
-import { Flame } from "lucide-react";
+import { TicketChecker } from "@/components/public/TicketChecker";
+import { Calendar, MapPin, Phone } from "lucide-react";
 
 interface PublicShowcaseClientProps {
   initialPrizes: SerializablePrize[];
@@ -15,10 +16,8 @@ export function PublicShowcaseClient({ initialPrizes }: PublicShowcaseClientProp
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [search, setSearch] = useState("");
 
-  // Extract distinct rounds
   const rounds = Array.from(new Set(initialPrizes.map((p) => p.round))).filter(Boolean);
 
-  // Filter client-side based on the safe, published prizes passed from server
   const filteredPrizes = initialPrizes.filter((prize) => {
     if (search.trim() && !prize.title.toLowerCase().includes(search.toLowerCase())) {
       return false;
@@ -34,30 +33,74 @@ export function PublicShowcaseClient({ initialPrizes }: PublicShowcaseClientProp
 
   return (
     <div className="space-y-8">
-      {/* Hero Showcase Banner */}
-      <section className="relative rounded-2xl border border-amber-500/20 bg-linear-to-b from-amber-500/10 via-card/50 to-card p-6 sm:p-10 overflow-hidden">
-        {/* Subtle accent glow */}
-        <div className="absolute -top-24 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Official Red Cross Event Hero Banner */}
+      <section className="relative rounded-2xl border border-red-500/25 bg-gradient-to-b from-red-950/30 via-card to-card p-6 sm:p-10 overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-red-600/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 border border-amber-500/30 text-amber-400">
-            <Flame className="h-3.5 w-3.5" />
-            <span>งานกิจกรรมจับฉลากประจำปี 2026</span>
+        <div className="relative z-10 max-w-4xl space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-500/10 border border-red-500/30 text-red-400">
+            <span>สำนักงานเหล่ากาชาดจังหวัดศรีสะเกษ</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground">
-            มหกรรมลุ้นของรางวัลสุดยิ่งใหญ่
-          </h2>
+          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground leading-tight">
+            เงื่อนไขรางวัลสลากกาชาด ประจำปี ๒๕๗๐
+          </h1>
 
-          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl">
-            ร่วมลุ้นของรางวัลสุดพรีเมียมจากหลากหลายรอบกิจกรรม
-            ตรวจสอบรายชื่อของรางวัลที่พร้อมแจก และประกาศผลผู้โชคดีแบบเรียลไทม์
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+            จำนวน ๙๙,๙๙๙ ฉบับ ฉบับละ ๑๐๐ บาท โดยมีรางวัลสลากกาชาด ประจำปี ๒๕๗๐ รวมทั้งสิ้น ๑๒๗ รางวัล
           </p>
+
+          {/* Event Official Notice Box */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs">
+            <div className="p-3 rounded-xl bg-slate-900/80 border border-border flex items-start gap-2.5">
+              <Calendar className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
+              <div>
+                <span className="font-semibold text-foreground block">วันออกรางวัล</span>
+                <span className="text-muted-foreground">
+                  วันจันทร์ที่ ๔ มกราคม ๒๕๗๐ เวลา ๒๐.๓๐ น. ณ บริเวณเวทีกลางฯ
+                </span>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-900/80 border border-border flex items-start gap-2.5">
+              <MapPin className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <span className="font-semibold text-foreground block">สถานที่รับรางวัล</span>
+                <span className="text-muted-foreground">
+                  สำนักงานเหล่ากาชาดจังหวัดศรีสะเกษ (๑๑ ม.ค. - ๙ ก.พ. ๒๕๗๐)
+                </span>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-900/80 border border-border flex items-start gap-2.5">
+              <Phone className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
+              <div>
+                <span className="font-semibold text-foreground block">ช่องทางตรวจผล</span>
+                <span className="text-muted-foreground">
+                  www.sisaket.go.th / ศาลากลางฯ โทร. ๐๔๕-๖๑๑๕๙๑
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Filter and Showcase Section */}
+      {/* Interactive Ticket Checker */}
+      <section>
+        <TicketChecker />
+      </section>
+
+      {/* Prize Showcase List */}
       <section className="space-y-6">
+        <div className="border-b border-border/80 pb-3 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-foreground">
+            รายการของรางวัลสลากกาชาด (๑๒๗ รางวัล)
+          </h2>
+          <span className="text-xs text-muted-foreground font-mono">
+            แสดงเฉพาะรางวัลที่เปิดเผยแพร่จากหลังบ้าน
+          </span>
+        </div>
+
         <PrizeFilters
           rounds={rounds}
           selectedRound={selectedRound}

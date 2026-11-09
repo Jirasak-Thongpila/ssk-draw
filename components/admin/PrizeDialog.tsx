@@ -35,9 +35,11 @@ function PrizeForm({
     title: prizeToEdit?.title || "",
     description: prizeToEdit?.description || "",
     imageUrl: prizeToEdit?.imageUrl || "",
-    tier: (prizeToEdit?.tier || "first") as PrizeTier,
-    round: prizeToEdit?.round || "รอบที่ 1",
+    tier: (prizeToEdit?.tier || "grand") as PrizeTier,
+    unit: prizeToEdit?.unit || "รางวัล",
+    round: prizeToEdit?.round || "ประจำปี ๒๕๗๐",
     quantity: prizeToEdit?.quantity || 1,
+    winningNumbersStr: prizeToEdit?.winningNumbers?.join(", ") || "",
     isPublished: prizeToEdit ? prizeToEdit.isPublished : true,
   });
 
@@ -46,11 +48,38 @@ function PrizeForm({
     if (!formData.title.trim()) return;
 
     setLoading(true);
+    const winningNumbers = formData.winningNumbersStr
+      ? formData.winningNumbersStr
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+
     try {
       if (prizeToEdit) {
-        await updatePrize(prizeToEdit._id, formData);
+        await updatePrize(prizeToEdit._id, {
+          title: formData.title,
+          description: formData.description,
+          imageUrl: formData.imageUrl,
+          tier: formData.tier,
+          unit: formData.unit,
+          round: formData.round,
+          quantity: formData.quantity,
+          winningNumbers,
+          isPublished: formData.isPublished,
+        });
       } else {
-        await createPrize(formData);
+        await createPrize({
+          title: formData.title,
+          description: formData.description,
+          imageUrl: formData.imageUrl,
+          tier: formData.tier,
+          unit: formData.unit,
+          round: formData.round,
+          quantity: formData.quantity,
+          winningNumbers,
+          isPublished: formData.isPublished,
+        });
       }
       onClose();
       if (onSuccess) onSuccess();
@@ -62,13 +91,13 @@ function PrizeForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 max-h-[85vh] overflow-y-auto pr-1">
       <DialogHeader>
         <DialogTitle>
           {prizeToEdit ? "แก้ไขข้อมูลของรางวัล" : "เพิ่มของรางวัลใหม่"}
         </DialogTitle>
         <DialogDescription>
-          กำหนดข้อมูลรางวัล ระดับ และตั้งค่าการเผยแพร่ไปยังหน้าบ้าน
+          กำหนดข้อมูลรางวัล ระดับ จำนวน และหมายเลขสลากที่ถูกรางวัล
         </DialogDescription>
       </DialogHeader>
 
@@ -79,7 +108,7 @@ function PrizeForm({
           </label>
           <Input
             required
-            placeholder="เช่น iPhone 16 Pro Max 256GB"
+            placeholder="เช่น รางวัลที่ ๑ รถยนต์โตโยต้าฟอร์จูนเนอร์ ๒.๔ LEADER G Plus"
             value={formData.title}
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
@@ -102,9 +131,13 @@ function PrizeForm({
               }
               className="w-full rounded-md border border-input bg-background/50 px-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
             >
-              <option value="grand">Grand Prize (รางวัลใหญ่)</option>
-              <option value="first">รางวัลที่ 1</option>
-              <option value="second">รางวัลที่ 2</option>
+              <option value="grand">รางวัลที่ ๑</option>
+              <option value="adjacent">ข้างเคียงรางวัลที่ ๑</option>
+              <option value="first">รางวัลที่ ๒</option>
+              <option value="second">รางวัลที่ ๓</option>
+              <option value="third">รางวัลที่ ๔</option>
+              <option value="fourth">รางวัลที่ ๕</option>
+              <option value="suffix3">เลขท้าย ๓ ตัว (๑๐๐ รางวัล)</option>
               <option value="consolation">รางวัลปลอบใจ</option>
               <option value="special">รางวัลพิเศษ</option>
             </select>
@@ -112,13 +145,13 @@ function PrizeForm({
 
           <div>
             <label className="text-xs font-medium text-slate-300 block mb-1">
-              รอบการจับรางวัล (Round)
+              หน่วยนับ (เช่น คัน, แท่ง, เครื่อง)
             </label>
             <Input
-              placeholder="เช่น รอบที่ 1 หรือ Grand Finale"
-              value={formData.round}
+              placeholder="เช่น คัน หรือ แท่ง"
+              value={formData.unit}
               onChange={(e) =>
-                setFormData({ ...formData, round: e.target.value })
+                setFormData({ ...formData, unit: e.target.value })
               }
             />
           </div>
@@ -144,31 +177,37 @@ function PrizeForm({
 
           <div>
             <label className="text-xs font-medium text-slate-300 block mb-1">
-              สถานะการเผยแพร่ (Publish)
+              รอบกิจกรรม
             </label>
-            <div className="flex items-center gap-2 pt-2">
-              <input
-                type="checkbox"
-                id="isPublishedCheck"
-                checked={formData.isPublished}
-                onChange={(e) =>
-                  setFormData({ ...formData, isPublished: e.target.checked })
-                }
-                className="h-4 w-4 rounded border-border text-amber-500 focus:ring-amber-500 cursor-pointer"
-              />
-              <label
-                htmlFor="isPublishedCheck"
-                className="text-xs text-foreground cursor-pointer select-none"
-              >
-                เผยแพร่ให้หน้าบ้านเห็นทันที
-              </label>
-            </div>
+            <Input
+              placeholder="ประจำปี ๒๕๗๐"
+              value={formData.round}
+              onChange={(e) =>
+                setFormData({ ...formData, round: e.target.value })
+              }
+            />
           </div>
         </div>
 
         <div>
           <label className="text-xs font-medium text-slate-300 block mb-1">
-            URL รูปภาพ (Image URL)
+            หมายเลขสลากที่ออกรางวัล (คั่นด้วยจุลภาค ,)
+          </label>
+          <Input
+            placeholder="เช่น 25701, 88992 (หรือ 570 สำหรับเลขท้าย)"
+            value={formData.winningNumbersStr}
+            onChange={(e) =>
+              setFormData({ ...formData, winningNumbersStr: e.target.value })
+            }
+          />
+          <span className="text-[11px] text-muted-foreground mt-0.5 block">
+            หมายเลขนี้จะใช้สำหรับระบบตรวจผลสลากอัตโนมัติที่หน้าบ้าน
+          </span>
+        </div>
+
+        <div>
+          <label className="text-xs font-medium text-slate-300 block mb-1">
+            URL รูปภาพ
           </label>
           <Input
             placeholder="https://images.unsplash.com/..."
@@ -184,14 +223,32 @@ function PrizeForm({
             รายละเอียดของรางวัล
           </label>
           <textarea
-            rows={3}
-            placeholder="ระบุสเปกหรือรายละเอียดรางวัลเพิ่มเติม..."
+            rows={2}
+            placeholder="ระบุสเปกหรือเงื่อนไขเพิ่มเติม..."
             value={formData.description}
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
             className="w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           />
+        </div>
+
+        <div className="flex items-center gap-2 pt-1">
+          <input
+            type="checkbox"
+            id="isPublishedCheck"
+            checked={formData.isPublished}
+            onChange={(e) =>
+              setFormData({ ...formData, isPublished: e.target.checked })
+            }
+            className="h-4 w-4 rounded border-border text-amber-500 focus:ring-amber-500 cursor-pointer"
+          />
+          <label
+            htmlFor="isPublishedCheck"
+            className="text-xs text-foreground cursor-pointer select-none"
+          >
+            เผยแพร่สู่หน้าบ้านทันที (ถ้าไม่ติ๊กจะเป็นแบบร่าง ซ่อนอยู่หลังบ้าน)
+          </label>
         </div>
       </div>
 
@@ -222,7 +279,7 @@ export function PrizeDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent onClose={() => onOpenChange(false)}>
+      <DialogContent onClose={() => onOpenChange(false)} className="max-w-lg">
         <PrizeForm
           key={prizeToEdit?._id || "new"}
           prizeToEdit={prizeToEdit}
